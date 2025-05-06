@@ -6,10 +6,10 @@ file_put_contents("debug_session.txt", print_r($_SESSION, true));
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "transit";
+$servername = "sql7.freesqldatabase.com";
+$username = "sql7777349";
+$password = "8Iib6bgQeK";  // Replace this once it finishes loading
+$database = "sql7777349";
 
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {

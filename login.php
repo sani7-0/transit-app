@@ -1,10 +1,9 @@
 <?php
 session_start();
-
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "transit";
+$servername = "sql7.freesqldatabase.com";
+$username = "sql7777349";
+$password = "8Iib6bgQeK";  // Replace this once it finishes loading
+$database = "sql7777349";
 
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {

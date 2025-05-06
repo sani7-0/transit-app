@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost";  // Change if using a different server
-$username = "root";         // Change if you set a MySQL password
-$password = "";             // Default for XAMPP is empty
-$dbname = "transit";  // Make sure this is correct
+$servername = "sql7.freesqldatabase.com";
+$username = "sql7777349";
+$password = "8Iib6bgQeK";  // Replace this once it finishes loading
+$database = "sql7777349";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 

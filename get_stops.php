@@ -2,7 +2,8 @@
 // get_stops.php
 header('Content-Type: application/json');
 
-$conn = new mysqli("localhost", "root", "", "transit");
+
+$conn = new mysqli("sql7.freesqldatabase.com", "sql7777349", "8Iib6bgQeK", "sql7777349");
 if ($conn->connect_error) {
     die(json_encode(["error" => "DB connection failed"]));
 }
