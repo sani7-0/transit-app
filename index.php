@@ -182,6 +182,24 @@ $driver_id = $_SESSION['driver_id']; // Get driver ID from session
 
             return R * c;
         }
+
+        function sendHeartbeat() {
+        if (!navigator.geolocation) return;
+        navigator.geolocation.getCurrentPosition(pos => {
+          fetch('update_location.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              latitude: pos.coords.latitude,
+              longitude: pos.coords.longitude
+            })
+          });
+        });
+      }
+      // send immediately, then every 60 000 ms
+      sendHeartbeat();
+      setInterval(sendHeartbeat, 60000);
+      
     </script>
 </body>
 </html>

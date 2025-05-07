@@ -5,8 +5,6 @@
   <title>Live Bus Tracking</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <link rel="manifest" href="/manifest.json">
-
   <style>
     :root {
       --primary: #4361ee;
@@ -14,220 +12,71 @@
       --background: #f8f9fa;
       --card-bg: #ffffff;
     }
-
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: var(--background);
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       color: #2b2d42;
     }
-
     h1 {
       background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      padding: 1.5rem;
-      margin: 0;
-      font-weight: 600;
-      font-size: 1.8rem;
+      color: white; padding: 1.5rem; margin: 0;
+      font-weight: 600; font-size: 1.8rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
     }
-
-    #langToggle {
-      background: rgba(255,255,255,0.2);
-      border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      color: white;
-      cursor: pointer;
-      font-weight: 600;
+    #langToggle { background: rgba(255,255,255,0.2); border: none; padding: 8px 16px;
+      border-radius: 20px; color: white; cursor: pointer; font-weight: 600;
       transition: all 0.2s ease;
     }
-
-    #langToggle:hover {
-      background: rgba(255,255,255,0.3);
+    #langToggle:hover { background: rgba(255,255,255,0.3); }
+    #searchBar { margin: 20px auto; width: 95%; max-width: 600px; display: flex; gap: 8px; }
+    #destinationSearch { flex: 1; padding: 12px 16px; font-size: 1rem;
+      border: 1px solid #dee2e6; border-radius: 8px; transition: all 0.3s ease;
     }
-
-    #searchBar {
-      margin: 20px auto;
-      width: 95%;
-      max-width: 600px;
-      display: flex;
-      gap: 8px;
+    #destinationSearch:focus { outline: none; border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67,97,238,0.1);
     }
-
-    #destinationSearch {
-      flex: 1;
-      padding: 12px 16px;
-      font-size: 1rem;
-      border: 1px solid #dee2e6;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-    }
-
-    #destinationSearch:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-    }
-
-    #searchBtn {
-      padding: 12px 24px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
+    #searchBtn { padding: 12px 24px; background: var(--primary); color: white;
+      border: none; border-radius: 8px; cursor: pointer; font-weight: 600;
       transition: all 0.2s ease;
     }
-
-    #searchBtn:hover {
-      background: var(--secondary);
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(67, 97, 238, 0.2);
+    #searchBtn:hover { background: var(--secondary); transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(67,97,238,0.2);
     }
-
-    /* ← Add inline summary box styles */
-    #inlineBusBox {
-      width: 95%;
-      margin: 1rem auto;
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      display: flex;
-      overflow-x: auto;
-      gap: 12px;
-    }
-    .inlineBusCard {
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      background: #f8f9fa;
-      border: 2px solid var(--primary);
-      border-radius: 8px;
-      padding: 8px 12px;
-      min-width: 180px;
-    }
-    .inlineBusColor {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      margin-right: 8px;
-    }
-    .inlineBusInfo {
-      display: flex;
-      flex-direction: column;
-      font-size: 0.9rem;
-    }
-    .inlineBusInfo span {
-      margin: 2px 0;
-    }
-    /* ↑ End inline summary styles */
-
-    #map {
-      height: 65vh;
-      width: 95%;
-      margin: 1rem auto;
-      border-radius: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    #map { height: 65vh; width: 95%; margin: 1rem auto;
+      border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);
       border: 1px solid rgba(0,0,0,0.1);
     }
-
-    /* New Bus Info Panel Styles */
-    #busInfoPanel {
-      width: 95%;
-      margin: 1rem auto;
-      background: white;
-      border-radius: 12px;
-      padding: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    #busInfoPanel { width: 95%; margin: 1rem auto; background: white;
+      border-radius: 12px; padding: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-
-    #busInfoPanel h3 {
-      margin: 0 0 1rem 0;
-      color: #2b2d42;
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    #busInfoPanel h3 { margin: 0 0 1rem 0; color: #2b2d42; font-size: 1.2rem;
+      display: flex; align-items: center; gap: 8px;
     }
-
-    #busList {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    #busList { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
       gap: 12px;
     }
-
-    .busCard {
-      background: #f8f9fa;
-      border-left: 4px solid var(--primary);
-      padding: 12px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
+    .busCard { background: #f8f9fa; border-left: 4px solid var(--primary);
+      padding: 12px; border-radius: 8px; display: flex; align-items: center;
+      cursor: pointer; transition: all 0.2s ease;
     }
-
-    .busCard:hover {
-      transform: translateY(-2px);
+    .busCard:hover { transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-
-    .busRoute {
-      font-weight: bold;
-      color: var(--primary);
-      min-width: 60px;
-      text-align: center;
-      font-size: 1.1rem;
+    .busRoute { font-weight: bold; color: var(--primary);
+      min-width: 60px; text-align: center; font-size: 1.1rem;
     }
-
-    .busDetails {
-      flex-grow: 1;
-      padding: 0 12px;
+    .busDetails { flex-grow: 1; padding: 0 12px; }
+    .busDetails small { color: #6c757d; font-size: 0.8rem; }
+    .busETA { font-weight: bold; color: #2b2d42;
+      min-width: 80px; text-align: right;
     }
-
-    .busDetails small {
-      color: #6c757d;
-      font-size: 0.8rem;
-    }
-
-    .busETA {
-      font-weight: bold;
-      color: #2b2d42;
-      min-width: 80px;
-      text-align: right;
-    }
-
     @media (max-width: 768px) {
-      #busList {
-        grid-template-columns: 1fr;
-      }
-      
-      h1 {
-        font-size: 1.5rem;
-        padding: 1rem;
-        flex-direction: column;
-        gap: 12px;
-      }
-      
-      #searchBar {
-        flex-direction: column;
-      }
-      
-      #searchBtn {
-        width: 100%;
-      }
-      /* adjust inline box on mobile */
-      #inlineBusBox {
-        flex-direction: column;
-        overflow-x: visible;
-      }
+      #busList { grid-template-columns: 1fr; }
+      h1 { font-size: 1.5rem; padding: 1rem; flex-direction: column; gap: 12px; }
+      #searchBar { flex-direction: column; }
+      #searchBtn { width: 100%; }
     }
   </style>
 </head>
@@ -240,243 +89,127 @@
     <input type="text" id="destinationSearch" placeholder="Search by route or destination..." />
     <button id="searchBtn">Search</button>
   </div>
-
-  <!-- ← New inline summary box -->
-  <div id="inlineBusBox">
-    <!-- JS will inject .inlineBusCard items here -->
-  </div>
-  <!-- ↑ End inline summary box -->
-
   <div id="map"></div>
-  
-  <!-- New Bus Info Panel -->
   <div id="busInfoPanel">
     <h3>🚌 Active Buses</h3>
-    <div id="busList">
-      <!-- Dynamic content will load here -->
-    </div>
+    <div id="busList"></div>
   </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js");
-    }
-  </script>
-  
-  <script>
-    // Language configuration
     const translations = {
-      en: {
-        title: "🚍 Live Bus Tracking & Real-time ETA",
-        searchPlaceholder: "Search by route or destination...",
-        searchButton: "Search",
-        etaPrefix: "ETA:",
-        yourLocation: "📍 You are here",
-        etaUnavailable: "Calculating...",
-        unknownRoute: "Unknown Route",
-        minutes: "min",
-        errorLocation: "Error getting your location: ",
-        errorRoutes: "❌ Error loading routes:",
-        errorDrivers: "❌ Error loading drivers:",
-        activeBuses: "🚌 Active Buses"
-      },
-      am: {
-        title: "🚍 የባስ አቀማመጥ እና የደረሰኝ ጊዜ",
-        searchPlaceholder: "በሚሄድበት መንገድ ይፈልጉ...",
-        searchButton: "ፈልግ",
-        etaPrefix: "የደረሰኝ ጊዜ:",
-        yourLocation: "📍 እርስዎ እዚህ ነዎት",
-        etaUnavailable: "በመቁጠር ላይ...",
-        unknownRoute: "ያልታወቀ መንገድ",
-        minutes: "ደቂቃ",
-        errorLocation: "አካባቢዎን መወሰን ስህተት: ",
-        errorRoutes: "❌ መንገዶችን በማግኘት ላይ ስህተት:",
-        errorDrivers: "❌ አሽከርካሪዎችን በማግኘት ላይ ስህተት:",
-        activeBuses: "🚌 ንቁ አውቶብሶች"
-      }
+      en: { title:"🚍 Live Bus Tracking & Real-time ETA", searchPlaceholder:"Search by route or destination...", searchButton:"Search",
+            etaPrefix:"ETA:", yourLocation:"📍 You are here", etaUnavailable:"Calculating...", unknownRoute:"Unknown Route",
+            minutes:"min", errorLocation:"Error getting your location: ", errorRoutes:"❌ Error loading routes:",
+            errorDrivers:"❌ Error loading drivers:", activeBuses:"🚌 Active Buses" },
+      am: { title:"🚍 የባስ አቀማመጥ እና የደረሰኝ ጊዜ", searchPlaceholder:"በሚሄድበት መንገድ ይፈልጉ...", searchButton:"ፈልግ",
+            etaPrefix:"የደረሰኝ ጊዜ:", yourLocation:"📍 እርስዎ እዚህ ነዎት", etaUnavailable:"በመቁጠር ላይ...", unknownRoute:"ያልታወቀ መንገድ",
+            minutes:"ደቂቃ", errorLocation:"አካባቢዎን �መወሰን ስህተት: ", errorRoutes:"❌ መንገዶችን በማግኘት ላይ ስህተት:", errorDrivers:"❌ አሽከርካሪዎችን በማግኘት ላይ ስህተት:", activeBuses:"🚌 ንቁ አውቶብሶች" }
     };
-
     let currentLang = 'en';
     const TOMTOM_API_KEY = "TJ1OHQZFL3Gsaeg1GE0SdmB5347JETtr";
-    let map = L.map('map').setView([9.03, 38.74], 12);
+    let map = L.map('map').setView([9.03,38.74],12);
     let clientLocation = null;
     let driverMarkers = {};
     let routeLines = {};
-    let allRoutes = [];
-    let filteredRoutes = [];
+    let allRoutes = [], filteredRoutes = [];
 
-    // Initialize map with OSM tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(map);
 
-    // Language toggle handler
-    document.getElementById('langToggle').addEventListener('click', () => {
-      currentLang = currentLang === 'en' ? 'am' : 'en';
+    document.getElementById('langToggle').addEventListener('click',()=>{
+      currentLang = currentLang==='en'?'am':'en';
       updateTextContent();
-      updateDynamicContent();
     });
-
-    // Update static text content
-    function updateTextContent() {
-      document.getElementById('mainTitle').textContent = translations[currentLang].title;
-      document.getElementById('destinationSearch').placeholder = translations[currentLang].searchPlaceholder;
-      document.getElementById('searchBtn').textContent = translations[currentLang].searchButton;
-      document.getElementById('langToggle').textContent = currentLang === 'en' ? 'ቋንቋ/English' : 'Language/እንግሊዝኛ';
-      document.querySelector('#busInfoPanel h3').textContent = translations[currentLang].activeBuses;
+    function updateTextContent(){
+      const t=translations[currentLang];
+      document.getElementById('mainTitle').textContent=t.title;
+      document.getElementById('destinationSearch').placeholder=t.searchPlaceholder;
+      document.getElementById('searchBtn').textContent=t.searchButton;
+      document.querySelector('#busInfoPanel h3').textContent=t.activeBuses;
     }
 
-    // Update dynamic content
-    function updateDynamicContent() {
-      if (clientLocation) {
-        fetchDriverData();
-      }
+    navigator.geolocation.getCurrentPosition(pos=>{
+      clientLocation=[pos.coords.latitude,pos.coords.longitude];
+      L.marker(clientLocation).addTo(map).bindPopup(translations[currentLang].yourLocation).openPopup();
+      fetchRoutes(); fetchDriverData();
+      setInterval(fetchDriverData,60000);
+    },err=>alert(translations[currentLang].errorLocation+err.message));
+
+    function fetchRoutes(){
+      fetch('get_routes.php').then(r=>r.json()).then(routes=>{
+        allRoutes=filteredRoutes=routes; drawRoutes(routes);
+      }).catch(e=>console.error(translations[currentLang].errorRoutes,e));
     }
-
-    // Get client location
-    navigator.geolocation.getCurrentPosition(pos => {
-      const { latitude, longitude } = pos.coords;
-      clientLocation = [latitude, longitude];
-      L.marker(clientLocation).addTo(map)
-        .bindPopup(translations[currentLang].yourLocation)
-        .openPopup();
-
-      fetchRoutes();
-      fetchDriverData();
-      setInterval(fetchDriverData, 60000);
-    }, err => {
-      alert(translations[currentLang].errorLocation + err.message);
-    });
-
-    // Fetch routes from backend
-    function fetchRoutes() {
-      fetch('get_routes.php')
-        .then(res => res.json())
-        .then(routes => {
-          allRoutes = routes;
-          filteredRoutes = routes;
-          drawRoutes(filteredRoutes);
-        })
-        .catch(err => console.error(translations[currentLang].errorRoutes, err));
-    }
-
-    // Draw routes on the map
-    function drawRoutes(routes) {
-      for (const id in routeLines) {
-        map.removeLayer(routeLines[id]);
-      }
-      routeLines = {};
-      routes.forEach(route => {
-        if (!route.coordinates || route.coordinates.length < 2) return;
-        const latlngs = route.coordinates.map(coord => [coord.lat, coord.lng]);
-        const polyline = L.polyline(latlngs, {
-          color: route.route_color || 'blue',
-          weight: 4,
-          opacity: 0.6
-        }).addTo(map);
-        routeLines[route.id] = polyline;
-        if (route.stops) {
-          route.stops.forEach(stop => {
-            L.marker([stop.lat, stop.lng]).addTo(map)
-              .bindPopup(`📍 ${stop.name}`);
-          });
-        }
+    function drawRoutes(routes){
+      Object.values(routeLines).forEach(line=>map.removeLayer(line));
+      routeLines={};
+      routes.forEach(route=>{
+        if(route.coordinates?.length<2) return;
+        let latlngs=route.coordinates.map(c=>[c.lat,c.lng]);
+        let poly=L.polyline(latlngs,{color:route.route_color||'blue',weight:4,opacity:0.6}).addTo(map);
+        routeLines[route.id]=poly;
+        route.stops?.forEach(s=>L.marker([s.lat,s.lng]).addTo(map).bindPopup(`📍 ${s.name}`));
       });
     }
 
-    // Fetch driver data and update panels
-    async function fetchDriverData() {
+    async function fetchDriverData(){
       try {
-        const res = await fetch('get_locations.php');
-        const drivers = await res.json();
-
-        // — Inline summary box —
-        const inlineBox = document.getElementById('inlineBusBox');
-        inlineBox.innerHTML = '';
-
-        const busList = document.getElementById("busList");
-        busList.innerHTML = "";
-
-        for (const driver of drivers) {
-          const lat = parseFloat(driver.latitude);
-          const lng = parseFloat(driver.longitude);
-          const busLatLng = [lat, lng];
-          const routeName = driver.route_name || translations[currentLang].unknownRoute;
-          const routeColor = driver.route_color || "#4361ee";
-          let etaText = translations[currentLang].etaUnavailable;
-
-          if (clientLocation) {
-            const routeURL = `https://api.tomtom.com/routing/1/calculateRoute/${lat},${lng}:${clientLocation[0]},${clientLocation[1]}/json?key=${TOMTOM_API_KEY}`;
-            try {
-              const data = await (await fetch(routeURL)).json();
-              const minutes = Math.round(data.routes[0].summary.travelTimeInSeconds / 60);
-              etaText = `${minutes} ${translations[currentLang].minutes}`;
-            } catch {}
+        let res=await fetch('get_locations.php'), drivers=await res.json();
+        // filter out any driver offline >5min
+        const now=Date.now(), FIVE=5*60*1000;
+        drivers = drivers.filter(d=>{
+          let t=new Date(d.last_updated).getTime();
+          return now-t <= FIVE;
+        });
+        const busList=document.getElementById('busList');
+        busList.innerHTML='';
+        drivers.forEach(driver=>{
+          let lat=parseFloat(driver.latitude), lng=parseFloat(driver.longitude);
+          let routeName=driver.route_name||translations[currentLang].unknownRoute;
+          let color=driver.route_color||'#4361ee';
+          let eta=translations[currentLang].etaUnavailable;
+          if(clientLocation){
+            fetch(`https://api.tomtom.com/routing/1/calculateRoute/${lat},${lng}:${clientLocation[0]},${clientLocation[1]}/json?key=${TOMTOM_API_KEY}`)
+              .then(r=>r.json()).then(data=>{
+                let m=Math.round(data.routes[0].summary.travelTimeInSeconds/60);
+                eta=`${m} ${translations[currentLang].minutes}`;
+                if(driverMarkers[driver.user_id]) driverMarkers[driver.user_id].getPopup().setContent(`🚌 ${routeName}<br>${translations[currentLang].etaPrefix} ${eta}`);
+              }).catch(()=>{/*ignore*/});
           }
-
-          // → Inline summary card
-          const ib = document.createElement('div');
-          ib.className = 'inlineBusCard';
-          ib.innerHTML = `
-            <div class="inlineBusColor" style="background:${routeColor}"></div>
-            <div class="inlineBusInfo">
-              <span><strong>Route ${driver.route || 'N/A'}</strong></span>
-              <span>${routeName}</span>
-              <span>${translations[currentLang].etaPrefix} ${etaText}</span>
-            </div>`;
-          inlineBox.appendChild(ib);
-
-          // → Detailed bus panel card
-          const busCard = document.createElement("div");
-          busCard.className = "busCard";
-          busCard.style.borderLeftColor = routeColor;
-          busCard.innerHTML = `
-            <div class="busRoute" style="color:${routeColor}">${driver.route || "N/A"}</div>
-            <div class="busDetails">
-              <div>${routeName}</div>
-              <small>Driver ID: ${driver.user_id}</small>
-            </div>
-            <div class="busETA">${etaText}</div>
-          `;
-          busList.appendChild(busCard);
-
-          busCard.addEventListener("click", () => {
-            map.flyTo(busLatLng, 15);
+          let card=document.createElement('div'); card.className='busCard'; card.style.borderLeftColor=color;
+          card.innerHTML=`
+            <div class="busRoute" style="color:${color}">${driver.route||'N/A'}</div>
+            <div class="busDetails"><div>${routeName}</div><small>Driver ID: ${driver.user_id}</small></div>
+            <div class="busETA">${eta}</div>`;
+          busList.appendChild(card);
+          card.addEventListener('click',()=>{
+            map.flyTo([lat,lng],15);
+            driverMarkers[driver.user_id]?.openPopup();
           });
-
-          // Marker update/create
-          if (driverMarkers[driver.user_id]) {
-            driverMarkers[driver.user_id].setLatLng(busLatLng)
-              .getPopup().setContent(`🚌 ${routeName}<br>${translations[currentLang].etaPrefix} ${etaText}`);
+          if(driverMarkers[driver.user_id]){
+            driverMarkers[driver.user_id].setLatLng([lat,lng]);
           } else {
-            const icon = L.divIcon({
-              className: 'custom-icon',
-              html: `<div style="background:${routeColor};width:16px;height:16px;border-radius:50%;border:2px solid white;"></div>`,
-              iconSize: [16,16]
-            });
-            driverMarkers[driver.user_id] = L.marker(busLatLng, { icon })
-              .addTo(map)
-              .bindPopup(`🚌 ${routeName}<br>${translations[currentLang].etaPrefix} ${etaText}`);
+            let icon=L.divIcon({className:'custom-icon',html:`<div style="background:${color};width:16px;height:16px;border-radius:50%;border:2px solid white;"></div>`,iconSize:[16,16]});
+            let m=L.marker([lat,lng],{icon}).addTo(map).bindPopup(`🚌 ${routeName}<br>${translations[currentLang].etaPrefix} ${eta}`);
+            driverMarkers[driver.user_id]=m;
           }
-        }
-      } catch (err) {
-        console.error(translations[currentLang].errorDrivers, err);
+        });
+
+        // OPTIONAL: re‑fit map to show all markers
+        let group=L.featureGroup(Object.values(driverMarkers));
+        if(group.getLayers().length) map.fitBounds(group.getBounds().pad(0.2));
+
+      } catch(e){
+        console.error(translations[currentLang].errorDrivers,e);
       }
     }
 
-    // Search functionality
-    document.getElementById("searchBtn").addEventListener("click", () => {
-      const query = document.getElementById("destinationSearch").value.toLowerCase();
-      filteredRoutes = query ? allRoutes.filter(route =>
-        route.route_name?.toLowerCase().includes(query) ||
-        route.id.toString().includes(query)
-      ) : allRoutes;
+    document.getElementById('searchBtn').addEventListener('click',()=>{
+      let q=document.getElementById('destinationSearch').value.toLowerCase();
+      filteredRoutes=q?allRoutes.filter(r=>r.route_name?.toLowerCase().includes(q)||r.id.toString().includes(q)):allRoutes;
       drawRoutes(filteredRoutes);
     });
 
-
-    // Initial text setup
     updateTextContent();
   </script>
 </body>
