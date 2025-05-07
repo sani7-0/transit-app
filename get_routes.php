@@ -92,7 +92,12 @@ while ($route = $result->fetch_assoc()) {
         'stops' => $stops
     ];
 }
-
+// right after you build $routes[] but before echo:
+    file_put_contents('debug_routes.json', json_encode($routes, JSON_PRETTY_PRINT));
+    
+    
 $conn->close();
 echo json_encode($routes);
 ?>
+
+
