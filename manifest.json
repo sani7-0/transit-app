@@ -1,11 +1,15 @@
 {
+    "id": "/manifest.json",
     "name": "Transit App",
     "short_name": "Transit",
-    "description": "Live bus tracking & ETA for Addis transit",
+    "description": "Live bus tracking & real‑time ETA for Addis transit",
     "start_url": "/login.php",
+    "scope": "/",
     "display": "standalone",
+    "orientation": "any",
     "background_color": "#ffffff",
     "theme_color": "#4361ee",
+    "launch_handler": {},
     "icons": [
       {
         "src": "/icon-192.png",
@@ -15,6 +19,13 @@
       {
         "src": "/icon-512.png",
         "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "screenshots": [
+      {
+        "src": "/screenshot1.png",
+        "sizes": "640x360",
         "type": "image/png"
       }
     ]
