@@ -55,6 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transit Driver Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+
     <style>
         * {
             margin: 0;
@@ -199,6 +201,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h2>Driver Portal</h2>
             <div class="gradient-bar"></div>
         </div>
+        <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js");
+  }
+</script>
 
         <?php if (!empty($error)) echo "<div class='error-message'>$error</div>"; ?>
 

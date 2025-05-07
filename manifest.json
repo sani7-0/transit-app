@@ -1,10 +1,11 @@
 {
     "name": "Transit App",
     "short_name": "Transit",
+    "description": "Live bus tracking & ETA for Addis transit",
     "start_url": "/login.php",
     "display": "standalone",
     "background_color": "#ffffff",
-    "theme_color": "#4f46e5",
+    "theme_color": "#4361ee",
     "icons": [
       {
         "src": "/icon-192.png",
