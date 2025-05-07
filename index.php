@@ -14,6 +14,8 @@ $driver_id = $_SESSION['driver_id']; // Get driver ID from session
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real-Time Location Tracker</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="manifest" href="/manifest.json">
+
     <style>
         body, html { 
             background: cornflowerblue;
@@ -63,6 +65,11 @@ $driver_id = $_SESSION['driver_id']; // Get driver ID from session
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js");
+  }
+</script>
 
     <script>
         let map, marker, lastLat = null, lastLng = null;

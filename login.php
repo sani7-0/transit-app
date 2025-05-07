@@ -56,6 +56,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Transit Driver Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
+    <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+  }
+</script>
 
     <style>
         * {
